@@ -9,7 +9,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 const markers = {};
 
 if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
+    const watchId = navigator.geolocation.watchPosition(
         (position) => {
             const { latitude, longitude } = position.coords;
             console.log("Location:", latitude, longitude, "Accuracy:", position.coords.accuracy);
@@ -24,11 +24,16 @@ if (navigator.geolocation) {
             maximumAge: 0
         }
     );
+
+    // Optionally, you can clear the watch when the socket disconnects
+    socket.on("disconnect", () => {
+        navigator.geolocation.clearWatch(watchId);
+    });
 }
 
 socket.on("receive-location", (data) => {
     const { id, latitude, longitude } = data;
-    map.setView([latitude, longitude], 12);
+    map.setView([latitude, longitude], 16);
     if (markers[id]) {
         markers[id].setLatLng([latitude, longitude]);
     } else {
@@ -41,4 +46,14 @@ socket.on("user-disconnected", (id) => {
         map.removeLayer(markers[id]);
         delete markers[id];
     }
+});
+
+socket.on("update-clients", (clients) => {
+    const clientsList = document.getElementById("clients-list");
+    clientsList.innerHTML = "";
+    clients.forEach(clientId => {
+        const li = document.createElement("li");
+        li.textContent = clientId;
+        clientsList.appendChild(li);
+    });
 });

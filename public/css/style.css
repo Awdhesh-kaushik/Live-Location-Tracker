@@ -9,6 +9,31 @@ html , body{
     height: 100%;
 }
 #map {
-    width: 100%;
+    width: 75%;
     height: 100%;
+    float: right;
+}
+
+#sidebar {
+    width: 25%;
+    height: 100%;
+    float: left;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#sidebar h3 {
+    margin-bottom: 10px;
+}
+
+#clients-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#clients-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
 }
